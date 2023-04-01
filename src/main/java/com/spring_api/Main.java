@@ -1,19 +1,34 @@
 package com.spring_api;
 
+import java.util.List;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
+@RequestMapping("api/v1/customers")
 public class Main {
+<<<<<<< HEAD
 	public static void main(String[] args) {
+=======
+
+	private final CustomerRepository customerRepository;
+
+	public Main(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+	}
+
+	public static void main (String[] args){
+>>>>>>> ab414adaa43a0fe141c7db766b190be30eaa5d07
 		SpringApplication.run(Main.class, args);
 	}
 
-	@GetMapping("/customer")
-	public String greet() {
-		return "Hello";
+	@GetMapping
+	public List<Customer> getCustomers() {
+		return customerRepository.findAll();
 	}
 }

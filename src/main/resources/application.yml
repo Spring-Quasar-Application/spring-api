@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5332/customer
+    url: jdbc:postgresql://localhost:5432/spring_database
     username: spring_root
     password: spring_root
   jpa:
@@ -16,5 +16,3 @@ spring:
     show-sql: true
   main:
     web-application-type: servlet
-
-

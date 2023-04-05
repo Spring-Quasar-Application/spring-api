@@ -8,7 +8,7 @@ spring:
     password: spring_root
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hinernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -16,3 +16,8 @@ spring:
     show-sql: true
   main:
     web-application-type: servlet
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    username: spring_root
+    password: spring_root

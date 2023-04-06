@@ -30,13 +30,14 @@ jobs:
     steps:
       #Check-out your repository under $GITHUB_WORKSPACE, so your workflow can access it
       - uses: actions/checkout@v1
-      #Set up JDK 11
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: '17'
-      #Run Tests
       - name: Run Tests
+        env:
+          # Add the JaCoCo agent to the JVM arguments
+          MAVEN_OPTS: '-javaagent:/home/runner/work/_temp/maven-jaCoCo/jacocoagent.jar=destfile=coverage-report/jacoco.exec'
         run: mvn -B test
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -46,7 +47,6 @@ jobs:
   build:
     needs: tests
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17

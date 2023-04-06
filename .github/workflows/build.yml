@@ -20,7 +20,7 @@ jobs:
         env:
           POSTGRES_PASSWORD: spring_root
           POSTGRES_USER: spring_root
-          POSTGRES_DB: spring_datatable
+          POSTGRES_DB: spring_database
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready

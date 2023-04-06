@@ -37,7 +37,7 @@ jobs:
       - name: Run Tests
         env:
           # Add the JaCoCo agent to the JVM arguments
-          MAVEN_OPTS: '-javaagent:/home/runner/work/_temp/maven-jaCoCo/jacocoagent.jar=destfile=coverage-report/jacoco.exec'
+          MAVEN_OPTS: '-javaagent:${{ github.workspace }}/lib/jacocoagent.jar=destfile=coverage-report/jacoco.exec'
         run: mvn -B test
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_database
+    username: spring_root
+    password: spring_root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hinernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  main:
+    web-application-type: servlet
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    username: spring_root
+    password: spring_root

@@ -74,15 +74,6 @@
    			<groupId>org.jacoco</groupId>
    			<artifactId>jacoco-maven-plugin</artifactId>
    			<version>0.8.8</version>
-   			<configuration>
-   			   <destFile>-javaagent:${project.basedir}/jacoco-unit.exec</destFile>
-   			   <dataFile>-javaagent:${project.basedir}/jacoco-unit.exec</dataFile>
-   			   <output>file</output>
-   			   <append>true</append>
-   			   <excludes>
-   			      <exclude>*MethodAccess</exclude>
-   			   </excludes>
-   			</configuration>
    			<executions>
    			   <execution>
    			      <id>jacoco-initialize</id>

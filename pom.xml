@@ -82,13 +82,12 @@
    			      </goals>
    			      <phase>test-compile</phase>
    			   </execution>
-   			   <execution>
-   			      <id>jacoco-site</id>
-   			      <phase>verify</phase>
-   			      <goals>
-   			         <goal>report</goal>
-   			      </goals>
-   			   </execution>
+   			   <configuration>
+
+                    		<sourceDirectory>src/main/java/com/spring_api</sourceDirectory>
+		                <outputDirectory>src/main/java/com/spring_api</outputDirectory>
+	
+        		   </configuration>
    			</executions>
 			</plugin>
 			<plugin>

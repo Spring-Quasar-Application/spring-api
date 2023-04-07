@@ -81,14 +81,7 @@
    			         <goal>prepare-agent</goal>
    			      </goals>
    			      <phase>test-compile</phase>
-			      <configuration>
-
-                    		<sourceDirectory>src/main/java/com/spring_api</sourceDirectory>
-		                <outputDirectory>src/main/java/com/spring_api</outputDirectory>
-	
-        		   </configuration>
    			   </execution>
-   			   
    			</executions>
 			</plugin>
 			<plugin>

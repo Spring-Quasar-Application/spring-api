@@ -63,33 +63,36 @@
 		    <scope>test</scope>
 		</dependency>
 	</dependencies>
-	<profile>
-	<id>coverage</id>
-		<build>
-			<plugins>
-				<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+   					<groupId>org.jacoco</groupId>
+   					<artifactId>jacoco-maven-plugin</artifactId>
+   					<version>0.8.8</version>
+   					<executions>
+   					   <execution>
+   					      <id>jacoco-initialize</id>
+   					      <goals>
+   					         <goal>prepare-agent</goal>
+   					      </goals>
+   					      <phase>test-compile</phase>
+   					   </execution>
+   					</executions>
+					</plugin>
+					<plugin>
+    				<artifactId>maven-surefire-plugin</artifactId>
+    				<version>2.22.2</version>
 				</plugin>
-				<plugin>
-   				<groupId>org.jacoco</groupId>
-   				<artifactId>jacoco-maven-plugin</artifactId>
-   				<version>0.8.8</version>
-   				<executions>
-   				   <execution>
-   				      <id>jacoco-initialize</id>
-   				      <goals>
-   				         <goal>prepare-agent</goal>
-   				      </goals>
-   				      <phase>test-compile</phase>
-   				   </execution>
-   				</executions>
-				</plugin>
-				<plugin>
-    			<artifactId>maven-surefire-plugin</artifactId>
-    			<version>2.22.2</version>
-			</plugin>
-			</plugins>
-		</build>
-	</profile>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+		
 </project>

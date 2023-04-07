@@ -69,8 +69,8 @@
    			<artifactId>jacoco-maven-plugin</artifactId>
    			<version>0.8.6</version>
    			<configuration>
-   			   <destFile>-javaagent:${project.basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
-   			   <dataFile>-javaagent:${project.basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+   			   <destFile>-javaagent:${project.basedir}/jacoco-unit.exec</destFile>
+   			   <dataFile>-javaagent:${project.basedir}/jacoco-unit.exec</dataFile>
    			   <output>file</output>
    			   <append>true</append>
    			   <excludes>

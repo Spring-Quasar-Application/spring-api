@@ -10,8 +10,8 @@
 
 ## Create deployment Pull Request
 
-- [Create a STAGING deployment](https://github.com/AlexandruC0909/spring_api/compare/staging...develop?quick_pull=1&title=Deploy+to+STAGING+vX.X.X-staging.X&labels=deployment)
-- [Create a PROD deployment](https://github.com/AlexandruC0909/spring_api/compare/prod...staging?quick_pull=1&title=Deploy+to+PROD+vX.X.X&labels=deployment)
+- [Create a STAGING deployment](https://github.com/AlexandruC0909/spring-api/compare/staging...develop?quick_pull=1&title=Deploy+to+STAGING+vX.X.X-staging.X&labels=deployment)
+- [Create a PROD deployment](https://github.com/AlexandruC0909/spring-api/compare/prod...staging?quick_pull=1&title=Deploy+to+PROD+vX.X.X&labels=deployment)
 
 ## Create Release
 

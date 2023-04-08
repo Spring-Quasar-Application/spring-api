@@ -7,6 +7,8 @@
 | Branch | develop | staging | prod |
 | URL | N/A | [STAGING API](https:/baietiiRai.com/api)| [PROD API](https://app.baietiiRai.com/api) |
 | Coverage | [![codecov](https://codecov.io/gh/AlexandruC0909/spring-api/branch/develop/graph/badge.svg?token=55LRRUW8WC)](https://codecov.io/gh/AlexandruC0909/spring-api) | [![codecov](https://codecov.io/gh/AlexandruC0909/spring-api/branch/develop/graph/badge.svg?token=55LRRUW8WC)](https://codecov.io/gh/AlexandruC0909/spring-api) | [![codecov](https://codecov.io/gh/AlexandruC0909/spring-api/branch/develop/graph/badge.svg?token=55LRRUW8WC)](https://codecov.io/gh/AlexandruC0909/spring-api) |
+|Last commit|https://img.shields.io/github/last-commit/AlexandruC0909/spring-api | https://img.shields.io/github/last-commit/AlexandruC0909/spring-api | https://img.shields.io/github/last-commit/AlexandruC0909/spring-api|
+
 
 ## Create deployment Pull Request
 

@@ -1,4 +1,4 @@
-# SPRIG BOOT WEB API V1
+# SPRING BOOT WEB API V1
 
 ## Status
 

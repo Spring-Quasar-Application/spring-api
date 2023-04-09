@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -24,16 +23,13 @@ class StudentControllerTest {
     @Autowired
     private WebApplicationContext context;
 
-    @Autowired
-    FilterChainProxy securityFilterChain;
-
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
-                .apply(springSecurity(securityFilterChain))
+                .apply(springSecurity())
                 .build();
     }
     @Test

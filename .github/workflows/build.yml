@@ -44,6 +44,24 @@ jobs:
   build:
     needs: tests
     runs-on: ubuntu-latest
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: spring_root
+          POSTGRES_USER: spring_root
+          POSTGRES_DB: spring_database
+        ports:
+          - "5432:5432" 
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -68,6 +86,8 @@ jobs:
           POSTGRES_PASSWORD: spring_root
           POSTGRES_USER: spring_root
           POSTGRES_DB: spring_database
+        ports:
+          - "5432:5432" 
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready

@@ -1,0 +1,132 @@
+name: staging
+
+on:
+  push:
+    branches: [ "staging" ]
+    paths: [ '**.java', '.github/workflows/build.yml', 'pom.xml' ]
+
+jobs:
+  tests:
+    name: Unit tests
+    #Run on Ubuntu using the latest version
+    runs-on: ubuntu-latest
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: spring_root
+          POSTGRES_USER: spring_root
+          POSTGRES_DB: spring_database
+        ports:
+          - "5432:5432" 
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Run Tests
+        run: mvn -B test
+
+  build:
+    needs: tests
+    runs-on: ubuntu-latest
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: spring_root
+          POSTGRES_USER: spring_root
+          POSTGRES_DB: spring_database
+        ports:
+          - "5432:5432" 
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+  
+  coverage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'adopt'
+        java-version: '17'
+
+    - name: Build with Maven
+      run: mvn -B package -Pcoverage
+
+    - name: Generate JaCoCo badge
+      id: jacoco
+      uses: cicirello/jacoco-badge-generator@v2
+      with:
+        badges-directory: badges
+        generate-branches-badge: true
+        generate-summary: true
+
+    - name: Log coverage percentages to workflow output
+      run: |
+        echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
+        echo "branches = ${{ steps.jacoco.outputs.branches }}"
+
+    - name: Upload JaCoCo coverage report as a workflow artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: jacoco-report
+        path: target/site/jacoco/
+
+
+    - name: Comment on PR with coverage percentages
+      if: ${{ github.event_name == 'pull_request' }}
+      run: |
+        REPORT=$(<badges/coverage-summary.json)
+        COVERAGE=$(jq -r '.coverage' <<< "$REPORT")%
+        BRANCHES=$(jq -r '.branches' <<< "$REPORT")%
+        NEWLINE=$'\n'
+        BODY="## JaCoCo Test Coverage Summary Statistics${NEWLINE}* __Coverage:__ ${COVERAGE}${NEWLINE}* __Branches:__ ${BRANCHES}"
+        gh pr comment ${{github.event.pull_request.number}} -b "${BODY}"
+      continue-on-error: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get the Coverage info
+      run: |
+        echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
+        echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}

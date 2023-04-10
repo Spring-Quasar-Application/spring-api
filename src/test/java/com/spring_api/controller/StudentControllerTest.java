@@ -114,7 +114,7 @@ public class StudentControllerTest {
     @Test
     @Order(3)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
-    public void testGetStudentById() throws Exception {
+    public void testGetExistingStudentById() throws Exception {
         Long id = 1L;
         Student student = Student.builder().studentId(id).firstName("John").lastName("Doe").emailId("johndoe@gmail.com").build();
         when(studentRepository.findById(id)).thenReturn(Optional.of(student));
@@ -124,6 +124,17 @@ public class StudentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("John"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Doe"));
     }
+
+    @Test
+    @Order(4)
+    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    public void testGetNonExistingStudentById() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/students/3"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+                
+    }
+
 
     @Test
     @Order(1)
@@ -143,7 +154,7 @@ public class StudentControllerTest {
         assert savedStudent.getLastName().equals("Doe");
     }
     @Test
-    @Order(4)
+    @Order(5)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
     public void testEditExistingStudent() throws Exception {
         Student student = Student.builder().firstName("John").lastName("Doe2").emailId("johndoe@gmail.com").build();
@@ -161,7 +172,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
     public void testEditNonExistingStudent() throws Exception {
         Student student = Student.builder().firstName("John").lastName("Doe2").emailId("johndoe@gmail.com").build();
@@ -175,7 +186,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
     public void testDeleteNonExistingStudent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/students/2"))
@@ -184,7 +195,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
     public void testDeleteExistingStudent() throws Exception {
         Student studentToDelete = Student.builder().firstName("John").lastName("Doe").emailId("johndoe2@gmail.com").build();
@@ -210,14 +221,14 @@ public class StudentControllerTest {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void postAboutWithoutCsrfThenReturns403() throws Exception {
         this.mockMvc.perform(post("/students"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     public void getAboutWithoutCsrfThenReturns403() throws Exception {
         this.mockMvc.perform(get("/students"))
                 .andExpect(status().isForbidden());

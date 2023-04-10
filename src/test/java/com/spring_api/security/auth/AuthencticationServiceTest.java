@@ -1,4 +1,4 @@
-package com.spring_api.security;
+package com.spring_api.security.auth;
 
 import com.spring_api.security.auth.AuthenticationRequest;
 import com.spring_api.security.auth.AuthenticationResponse;
@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class SecurityTests {
+public class AuthencticationServiceTest {
 
     @Mock
     private UserRepository userRepository;

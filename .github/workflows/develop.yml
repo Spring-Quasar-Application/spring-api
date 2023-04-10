@@ -3,7 +3,8 @@ name: develop
 on:
   push:
     branches: [ "develop" ]
-    paths: [ '**.java', '.github/workflows/build.yml', 'pom.xml' ]
+  pull_request:
+    branches: [ "develop" ]
 jobs:
   tests:
     runs-on: ubuntu-latest

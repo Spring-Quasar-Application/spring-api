@@ -5,8 +5,10 @@ import com.spring_api.Main;
 import com.spring_api.entity.Student;
 import com.spring_api.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +55,7 @@ import java.util.Optional;
 @AutoConfigureTestDatabase
 @EnableWebSecurity
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class StudentControllerTest {
 
     @Autowired
@@ -86,7 +90,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
     public void testGetAllStudents() throws Exception {
         studentList = new ArrayList<>();  
@@ -108,7 +112,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
     public void testGetStudentById() throws Exception {
         Long id = 1L;
@@ -122,7 +126,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    @Order(3)
+    @Order(1)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
     public void testAddStudent() throws Exception {
         Student student = Student.builder().firstName("John").lastName("Doe").emailId("johndoe@gmail.com").build();
@@ -138,16 +142,82 @@ public class StudentControllerTest {
         assert savedStudent.getFirstName().equals("John");
         assert savedStudent.getLastName().equals("Doe");
     }
-
     @Test
     @Order(4)
+    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    public void testEditExistingStudent() throws Exception {
+        Student student = Student.builder().firstName("John").lastName("Doe2").emailId("johndoe@gmail.com").build();
+        when(studentRepository.save(student)).thenReturn(student);
+        String json = objectMapper.writeValueAsString(student);
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/students/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk())
+                .andReturn();
+        String content = mvcResult.getResponse().getContentAsString();
+        Student savedStudent = objectMapper.readValue(content, Student.class);
+        assert savedStudent.getFirstName().equals("John");
+        assert savedStudent.getLastName().equals("Doe2");
+    }
+
+    @Test
+    @Order(5)
+    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    public void testEditNonExistingStudent() throws Exception {
+        Student student = Student.builder().firstName("John").lastName("Doe2").emailId("johndoe@gmail.com").build();
+        when(studentRepository.save(student)).thenReturn(student);
+        String json = objectMapper.writeValueAsString(student);
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/students/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    @Order(6)
+    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    public void testDeleteNonExistingStudent() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/students/2"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    @Order(7)
+    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    public void testDeleteExistingStudent() throws Exception {
+        Student studentToDelete = Student.builder().firstName("John").lastName("Doe").emailId("johndoe2@gmail.com").build();
+        when(studentRepository.save(studentToDelete)).thenReturn(studentToDelete);
+    
+        // Save the student and get its ID
+        MvcResult saveResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/students")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentToDelete)))
+                .andExpect(status().isCreated())
+                .andReturn();
+        String saveContent = saveResult.getResponse().getContentAsString();
+        Student savedStudent = objectMapper.readValue(saveContent, Student.class);
+        Long studentId = savedStudent.getStudentId();
+    
+        // Delete the student
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/students/2"))
+                .andExpect(status().isNoContent())
+                .andReturn();
+        
+        assertNull(studentRepository.findById(studentId).orElse(null));
+
+    }
+
+    @Test
+    @Order(8)
     public void postAboutWithoutCsrfThenReturns403() throws Exception {
         this.mockMvc.perform(post("/students"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @Order(5)
+    @Order(9)
     public void getAboutWithoutCsrfThenReturns403() throws Exception {
         this.mockMvc.perform(get("/students"))
                 .andExpect(status().isForbidden());

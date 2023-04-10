@@ -45,6 +45,22 @@ public class UserTest {
   }
 
   @Test
+  public void testGetFirstname() {
+    Assertions.assertEquals("John", user.getFirstname());
+  }
+
+  @Test
+  public void testGetLastname() {
+    Assertions.assertEquals("Doe", user.getLastname());
+  }
+
+  
+  @Test
+  public void testGetEmail() {
+    Assertions.assertEquals("john.doe@example.com", user.getEmail());
+  }
+
+  @Test
   public void testIsAccountNonExpired() {
     Assertions.assertTrue(user.isAccountNonExpired());
   }

@@ -17,5 +17,5 @@
 
 ## Create Release
 
-- [Create a STAGING release](https://github.com/RegistreSecurite/registresecurite_web_api/releases/new?tag=vX.X.X-staging.X&target=staging&title=Deploy+vX.X.X-staging.X+into+STAGING&body=%23%23+:wrench:+Technical+issues:%0A%0A%23%23+:bulb:+Functional+issues:%0A%0AMerge+commit%3A&prerelease=1)
-- [Create a PROD release](https://github.com/RegistreSecurite/registresecurite_web_api/releases/new?tag=vX.X.X&target=master&title=Deploy+vX.X.X+into+PROD&body=%23%23+:wrench:+Technical+issues:%0A%0A%23%23+:bulb:+Functional+issues:%0A%0AMerge+commit%3A&prerelease=0)
+- [Create a STAGING release](https://github.com/AlexandruC0909/spring-api/releases/new?tag=vX.X.X-staging.X&target=staging&title=Deploy+vX.X.X-staging.X+into+STAGING&body=%23%23+:wrench:+Technical+issues:%0A%0A%23%23+:bulb:+Functional+issues:%0A%0AMerge+commit%3A&prerelease=1)
+- [Create a PROD release](https://github.com/AlexandruC0909/spring-api/releases/new?tag=vX.X.X&target=master&title=Deploy+vX.X.X+into+PROD&body=%23%23+:wrench:+Technical+issues:%0A%0A%23%23+:bulb:+Functional+issues:%0A%0AMerge+commit%3A&prerelease=0)

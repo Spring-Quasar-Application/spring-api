@@ -2,6 +2,7 @@ package com.spring_api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring_api.Main;
+import com.spring_api.entity.Guardian;
 import com.spring_api.entity.Student;
 import com.spring_api.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -140,7 +141,8 @@ public class StudentControllerTest {
     @Order(1)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
     public void testAddStudent() throws Exception {
-        Student student = Student.builder().firstName("John").lastName("Doe").emailId("johndoe@gmail.com").build();
+        Guardian guardian = Guardian.builder().name("name").email("email").mobile("443433443").build();
+        Student student = Student.builder().firstName("John").lastName("Doe").emailId("johndoe@gmail.com").guardian(guardian).build();
         when(studentRepository.save(student)).thenReturn(student);
         String json = objectMapper.writeValueAsString(student);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/students")
@@ -157,7 +159,8 @@ public class StudentControllerTest {
     @Order(5)
     @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
     public void testEditExistingStudent() throws Exception {
-        Student student = Student.builder().firstName("John").lastName("Doe2").emailId("johndoe@gmail.com").build();
+        Guardian guardian = Guardian.builder().name("nameEdit").email("emailEdit").mobile("443433443").build();
+        Student student = Student.builder().firstName("John").lastName("Doe2").emailId("johndoe@gmail.com").guardian(guardian).build();
         when(studentRepository.save(student)).thenReturn(student);
         String json = objectMapper.writeValueAsString(student);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/students/1")

@@ -3,7 +3,8 @@ name: staging
 on:
   push:
     branches: [ "staging" ]
-    paths: [ '**.java', '.github/workflows/build.yml', 'pom.xml' ]
+  pull_request:
+    branches: [ "staging" ]
 
 jobs:
   tests:

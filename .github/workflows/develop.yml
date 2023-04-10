@@ -6,7 +6,6 @@ on:
     paths: [ '**.java', '.github/workflows/build.yml', 'pom.xml' ]
 jobs:
   tests:
-    needs: build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout

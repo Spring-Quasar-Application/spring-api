@@ -21,3 +21,14 @@ spring:
     enabled: true
     username: spring_root
     password: spring_root
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: heartless0909@gmail.com
+    password: qxjyymlfjlmtgtgo
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

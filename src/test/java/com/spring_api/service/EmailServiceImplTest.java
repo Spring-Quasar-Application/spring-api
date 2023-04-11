@@ -37,6 +37,7 @@ public class EmailServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         emailService = new EmailServiceImpl();
+
         emailService.setJavaMailSender(javaMailSender);
     }
 

@@ -50,6 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @SpringBootTest(classes = Main.class)
@@ -73,28 +74,31 @@ public class StudentControllerTest {
 
     private List<Student> studentList;
 
-    Student student1 = Student.builder().studentId(1L).firstName("John").lastName("Doe").emailId("johndoe@example.com").build();
-    Student student2 = Student.builder().studentId(2L).firstName("Jane").lastName("Doe").emailId("janedoe@example.com").build();
+    Student student1 = Student.builder().studentId(1L).firstName("John").lastName("Doe").emailId("johndoe@example.com")
+            .build();
+    Student student2 = Student.builder().studentId(2L).firstName("Jane").lastName("Doe").emailId("janedoe@example.com")
+            .build();
 
     @BeforeEach
-    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    @WithMockUser(username = "testuser", authorities = { "ROLE_ADMIN" })
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        //this.mockMvc = StandaloneMockMvcBuilder.standaloneSetup(studentController).build();
-        studentList = new ArrayList<>();  
+        // this.mockMvc =
+        // StandaloneMockMvcBuilder.standaloneSetup(studentController).build();
+        studentList = new ArrayList<>();
         studentList.add(student1);
         studentList.add(student2);
-        studentList = new ArrayList<>();  
+        studentList = new ArrayList<>();
         studentList.add(student1);
         studentList.add(student2);
-      
+
     }
 
     @Test
     @Order(2)
-    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    @WithMockUser(username = "testuser", authorities = { "ROLE_ADMIN" })
     public void testGetAllStudents() throws Exception {
-        studentList = new ArrayList<>();  
+        studentList = new ArrayList<>();
         studentList.add(student1);
         studentList.add(student2);
         when(studentRepository.findAll()).thenReturn(studentList);
@@ -109,15 +113,16 @@ public class StudentControllerTest {
 
                 .andExpect(jsonPath("$[0].lastName", is("Doe")));
 
-                //.andExpect(MockMvcResultMatchers.jsonPath("$.[1].firstName").value("Jane"));
+        // .andExpect(MockMvcResultMatchers.jsonPath("$.[1].firstName").value("Jane"));
     }
 
     @Test
     @Order(3)
-    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    @WithMockUser(username = "testuser", authorities = { "ROLE_ADMIN" })
     public void testGetExistingStudentById() throws Exception {
         Long id = 1L;
-        Student student = Student.builder().studentId(id).firstName("John").lastName("Doe").emailId("johndoe@gmail.com").build();
+        Student student = Student.builder().studentId(id).firstName("John").lastName("Doe").emailId("johndoe@gmail.com")
+                .build();
         when(studentRepository.findById(id)).thenReturn(Optional.of(student));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/students/" + id))
                 .andExpect(status().isOk())
@@ -128,21 +133,21 @@ public class StudentControllerTest {
 
     @Test
     @Order(4)
-    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    @WithMockUser(username = "testuser", authorities = { "ROLE_ADMIN" })
     public void testGetNonExistingStudentById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/students/3"))
                 .andExpect(status().isNotFound())
                 .andReturn();
-                
-    }
 
+    }
 
     @Test
     @Order(1)
-    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    @WithMockUser(username = "testuser", authorities = { "ROLE_ADMIN" })
     public void testAddStudent() throws Exception {
         Guardian guardian = Guardian.builder().name("name").email("email").mobile("443433443").build();
-        Student student = Student.builder().firstName("John").lastName("Doe").emailId("johndoe@gmail.com").guardian(guardian).build();
+        Student student = Student.builder().firstName("John").lastName("Doe").emailId("johndoe@gmail.com")
+                .guardian(guardian).build();
         when(studentRepository.save(student)).thenReturn(student);
         String json = objectMapper.writeValueAsString(student);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/students")
@@ -155,12 +160,14 @@ public class StudentControllerTest {
         assert savedStudent.getFirstName().equals("John");
         assert savedStudent.getLastName().equals("Doe");
     }
+
     @Test
     @Order(5)
-    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    @WithMockUser(username = "testuser", authorities = { "ROLE_ADMIN" })
     public void testEditExistingStudent() throws Exception {
         Guardian guardian = Guardian.builder().name("nameEdit").email("emailEdit").mobile("443433443").build();
-        Student student = Student.builder().firstName("John").lastName("Doe2").emailId("johndoe@gmail.com").guardian(guardian).build();
+        Student student = Student.builder().firstName("John").lastName("Doe2").emailId("johndoe@gmail.com")
+                .guardian(guardian).build();
         when(studentRepository.save(student)).thenReturn(student);
         String json = objectMapper.writeValueAsString(student);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/students/1")
@@ -176,7 +183,7 @@ public class StudentControllerTest {
 
     @Test
     @Order(6)
-    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    @WithMockUser(username = "testuser", authorities = { "ROLE_ADMIN" })
     public void testEditNonExistingStudent() throws Exception {
         Student student = Student.builder().firstName("John").lastName("Doe2").emailId("johndoe@gmail.com").build();
         when(studentRepository.save(student)).thenReturn(student);
@@ -190,7 +197,7 @@ public class StudentControllerTest {
 
     @Test
     @Order(7)
-    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    @WithMockUser(username = "testuser", authorities = { "ROLE_ADMIN" })
     public void testDeleteNonExistingStudent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/students/2"))
                 .andExpect(status().isNotFound())
@@ -199,11 +206,12 @@ public class StudentControllerTest {
 
     @Test
     @Order(8)
-    @WithMockUser(username = "testuser", authorities = {"ROLE_ADMIN"})
+    @WithMockUser(username = "testuser", authorities = { "ROLE_ADMIN" })
     public void testDeleteExistingStudent() throws Exception {
-        Student studentToDelete = Student.builder().firstName("John").lastName("Doe").emailId("johndoe2@gmail.com").build();
+        Student studentToDelete = Student.builder().firstName("John").lastName("Doe").emailId("johndoe2@gmail.com")
+                .build();
         when(studentRepository.save(studentToDelete)).thenReturn(studentToDelete);
-    
+
         // Save the student and get its ID
         MvcResult saveResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/students")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -213,12 +221,12 @@ public class StudentControllerTest {
         String saveContent = saveResult.getResponse().getContentAsString();
         Student savedStudent = objectMapper.readValue(saveContent, Student.class);
         Long studentId = savedStudent.getStudentId();
-    
+
         // Delete the student
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/students/2"))
                 .andExpect(status().isNoContent())
                 .andReturn();
-        
+
         assertNull(studentRepository.findById(studentId).orElse(null));
 
     }

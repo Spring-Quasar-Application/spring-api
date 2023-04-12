@@ -1,9 +1,17 @@
 package com.spring_api.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring_api.entity.Student;
@@ -24,15 +33,51 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    public Sort.Direction getSortDirection(String direction) {
+        if (direction.equalsIgnoreCase("asc")) {
+            return Sort.Direction.ASC;
+        } else if (direction.equalsIgnoreCase("desc")) {
+            return Sort.Direction.DESC;
+        } else {
+            throw new IllegalArgumentException("Invalid sort direction: " + direction);
+        }
+    }
+
     @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents() {
-        List<Student> students = studentService.getAllStudents();
-        return new ResponseEntity<>(students, HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getAllStudents(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "studentId,desc") String[] sort) {
+
+        List<Order> orders = new ArrayList<Order>();
+
+        if (sort[0].contains(",")) {
+            for (String sortOrder : sort) {
+                String[] _sort = sortOrder.split(",");
+                orders.add(new Order(getSortDirection(_sort[1]), _sort[0]));
+            }
+        } else {
+            // sort=[field, direction]
+            orders.add(new Order(getSortDirection(sort[1]), sort[0]));
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orders));
+        Page<Student> response = studentService.getAllStudents(pageable);
+        List<Student> students = new ArrayList<Student>();
+
+        students = response.getContent();
+
+        Map<String, Object> paginationResponse = new HashMap<>();
+        paginationResponse.put("students", students);
+        paginationResponse.put("currentPage", response.getNumber());
+        paginationResponse.put("totalItems", response.getTotalElements());
+        paginationResponse.put("totalPages", response.getTotalPages());
+
+        return new ResponseEntity<>(paginationResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

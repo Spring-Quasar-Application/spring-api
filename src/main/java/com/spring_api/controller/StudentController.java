@@ -49,8 +49,8 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+    @CrossOrigin(origins = "http://localhost:8090")
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:8090/students")
     public ResponseEntity<Map<String, Object>> getAllStudents(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
@@ -83,6 +83,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:8090")
     public ResponseEntity<Student> getStudentById(@PathVariable("id") Long id) {
         Optional<Student> optionalStudent = studentService.getStudentById(id);
         if (optionalStudent.isPresent()) {

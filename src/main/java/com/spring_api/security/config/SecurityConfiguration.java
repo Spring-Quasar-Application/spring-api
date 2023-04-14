@@ -2,6 +2,9 @@ package com.spring_api.security.config;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -12,7 +15,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import io.jsonwebtoken.lang.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -30,21 +37,51 @@ public class SecurityConfiguration {
         .disable()
         .authorizeHttpRequests()
         .requestMatchers("/api/v1/auth/**")
-          .permitAll()
+        .permitAll()
         .anyRequest()
-          .authenticated()
+        .authenticated()
         .and()
-          .sessionManagement()
-          .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .logout()
         .logoutUrl("/api/v1/auth/logout")
         .addLogoutHandler(logoutHandler)
-        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-    ;
+        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());
 
     return http.build();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    final CorsConfiguration config = new CorsConfiguration();
+
+    List<String> allowedOrigins = new ArrayList<>();
+    allowedOrigins.add("http://localhost:8090");
+    config.setAllowedOrigins(allowedOrigins);
+
+    List<String> allowedMethods = new ArrayList<>();
+    allowedMethods.add("GET");
+    allowedMethods.add("POST");
+    allowedMethods.add("OPTIONS");
+    allowedMethods.add("DELETE");
+    allowedMethods.add("PUT");
+    allowedMethods.add("PATCH");
+    config.setAllowedMethods(allowedMethods);
+
+    config.setAllowCredentials(true);
+
+    List<String> allowedHeaders = new ArrayList<>();
+    allowedHeaders.add("Authorization");
+    allowedHeaders.add("Cache-Control");
+    allowedHeaders.add("Content-Type");
+    config.setAllowedHeaders(allowedHeaders);
+
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+
+    return source;
   }
 }

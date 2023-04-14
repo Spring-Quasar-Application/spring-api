@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,12 +29,14 @@ public class AuthenticationController {
   private final EmailService emailService;
   private final PasswordEncoder passwordEncoder;
 
+  @CrossOrigin(origins = "http://localhost:8090")
   @PostMapping("/register")
   public ResponseEntity<AuthenticationResponse> register(
       @RequestBody RegisterRequest request) {
     return ResponseEntity.ok(service.register(request));
   }
 
+  @CrossOrigin(origins = "http://localhost:8090")
   @PostMapping("/login")
   public ResponseEntity<AuthenticationResponse> authenticate(
       @RequestBody AuthenticationRequest request) {

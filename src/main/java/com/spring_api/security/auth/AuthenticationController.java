@@ -1,7 +1,10 @@
 package com.spring_api.security.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -43,6 +46,15 @@ public class AuthenticationController {
     return ResponseEntity.ok(service.authenticate(request));
   }
 
+  @CrossOrigin(origins = "http://localhost:8090")
+  @PostMapping("/refresh-token")
+  public void refreshToken(
+      HttpServletRequest request,
+      HttpServletResponse response) throws IOException {
+    service.refreshToken(request, response);
+  }
+
+  @CrossOrigin(origins = "http://localhost:8090")
   @PostMapping("/forgot-password")
   public void forgotPassword(@RequestParam String email) {
     User user = null;
@@ -61,6 +73,7 @@ public class AuthenticationController {
     }
   }
 
+  @CrossOrigin(origins = "http://localhost:8090")
   @GetMapping("/reset-password")
   public void showResetPasswordForm(@RequestParam String token) {
     // Check if the token is valid
@@ -72,6 +85,7 @@ public class AuthenticationController {
     }
   }
 
+  @CrossOrigin(origins = "http://localhost:8090")
   @PostMapping("/reset-password")
   public void resetPassword(@RequestParam String token, @RequestParam String password) {
     // Check if the token is valid
@@ -84,5 +98,4 @@ public class AuthenticationController {
       // Redirect to an error page
     }
   }
-
 }

@@ -1,9 +1,5 @@
 package com.spring_api.security.auth;
 
-import com.spring_api.security.auth.AuthenticationRequest;
-import com.spring_api.security.auth.AuthenticationResponse;
-import com.spring_api.security.auth.AuthenticationService;
-import com.spring_api.security.auth.RegisterRequest;
 import com.spring_api.security.config.JwtService;
 import com.spring_api.security.token.TokenRepository;
 import com.spring_api.security.user.Role;
@@ -76,7 +72,7 @@ public class AuthencticationServiceTest {
 
         // Then
         assertNotNull(response);
-        assertEquals("jwtToken", response.getToken());
+        assertEquals("jwtToken", response.getAccessToken());
         verify(userRepository, times(1)).save(any(User.class));
         verify(jwtService, times(1)).generateToken(any(User.class));
         verify(tokenRepository, times(1)).save(any());
@@ -106,7 +102,7 @@ public class AuthencticationServiceTest {
 
         // Then
         assertNotNull(response);
-        assertEquals("jwtToken", response.getToken());
+        assertEquals("jwtToken", response.getAccessToken());
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(userRepository, times(1)).findByEmail(anyString());
         verify(jwtService, times(1)).generateToken(any(User.class));
